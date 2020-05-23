@@ -56,6 +56,8 @@ In the folder **qr** there are two files:
 
 ## Quick start
 
+If you want to skip some steps and just want to get the kernel, the root file system image and the QEMU wrapper script, without taking time to build the image, you can dowload the [QEMU MIPSel image and wrapper script](http://uk2.digiampietro.com/hht/makemehack-linux4mips.tar.gz) and start playing with QEMU.
+
 ### Clone this repo
 
 Clone this repository in your preferred folder:
