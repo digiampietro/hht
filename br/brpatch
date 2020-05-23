@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+#-----------------------------------------------------------------------
+# set MYDIR   to this script directory
+# set BRDIR   to the Buildroot dir, in the parent directory
+#-----------------------------------------------------------------------
+export MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export BRDIR="$( cd $MYDIR/../buildroot-2* && pwd )"
+cd $BRDIR
+for PATCH in $MYDIR/0*.patch
+do echo "applying patch: $PATCH"
+   patch -N -p1 < $PATCH
+done

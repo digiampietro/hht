@@ -1,0 +1,10 @@
+diff -Naur a/package/binutils/binutils.mk b/package/binutils/binutils.mk
+--- a/package/binutils/binutils.mk	2020-05-17 23:38:11.144052708 +0200
++++ b/package/binutils/binutils.mk	2020-05-17 23:38:11.148052704 +0200
+@@ -1,3 +1,6 @@
++TARGET_CFLAGS += -fPIC
++BINUTILS_CONF_ENV = \
++        CFLAGS="$(TARGET_CFLAGS)"
+ ################################################################################
+ #
+ # binutils

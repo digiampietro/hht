@@ -1,0 +1,6 @@
+*.bin
+*~
+*.orig
+*.log
+@eaDir
+buildroot-2015.02

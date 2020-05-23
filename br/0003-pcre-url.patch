@@ -1,0 +1,12 @@
+diff -Naur a/package/pcre/pcre.mk b/package/pcre/pcre.mk
+--- a/package/pcre/pcre.mk	2020-05-18 12:39:46.599209682 +0200
++++ b/package/pcre/pcre.mk	2020-05-18 12:40:02.827325027 +0200
+@@ -5,7 +5,7 @@
+ ################################################################################
+ 
+ PCRE_VERSION = 8.36
+-PCRE_SITE = ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
++PCRE_SITE = https://ftp.pcre.org/pub/pcre
+ PCRE_LICENSE = BSD-3c
+ PCRE_LICENSE_FILES = LICENCE
+ PCRE_INSTALL_STAGING = YES

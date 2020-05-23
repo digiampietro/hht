@@ -1,0 +1,61 @@
+#!/bin/bash
+MYHOSTNAME=`hostname`
+#-----------------------------------------------------------------------
+# execute this script only on the docker host
+#-----------------------------------------------------------------------
+if [ "$MYHOSTNAME" != "BRHOST" ]
+then
+    echo "brmake and make must be executed on docker brhost"
+    exit
+fi
+#-----------------------------------------------------------------------
+# set MYDIR   to this script directory
+# set BRDIR   to the Buildroot dir, in the parent directory
+# set BR2EXT  to the external tree
+# set IOTROOT to the squashfs root file system of the iot device
+# set IOTFIRM to the directory where there is the eprom dump
+#-----------------------------------------------------------------------
+export MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export BRDIR="$( cd $MYDIR/../buildroot-2* && pwd )"
+export BR2EXT="$MYDIR/ext-tree"
+export IOTROOT=$HOME/temp/gemtek/squashfs-root
+export IOTFIRM=$HOME/temp/gemtek
+echo "-----> MYDIR:     $MYDIR"
+echo "-----> BRDIR:     $BRDIR"
+echo "-----> BR2EXT:    $BR2EXT"
+echo "-----> change dir to $BRDIR"
+cd $BRDIR
+echo "-----> executing: make BR2_EXTERNAL=$BR2EXT $*"
+
+#-----------------------------------------------------------------------
+if [ "$*" == "savedefconfig" ]
+then
+    #-----------------------------------------------------------------------
+    # savedefconfig
+    #-----------------------------------------------------------------------
+    make BR2_EXTERNAL=$BR2EXT BR2_DEFCONFIG="$BR2EXT/configs/mips4kc-qemu_mipsel_malta_defconfig" $* 
+elif [ "$*" == "uclibc-update-config" ]
+then
+    #-----------------------------------------------------------------------
+    # uclibc-update-config
+    #-----------------------------------------------------------------------    
+    make BR2_EXTERNAL=$BR2EXT BR2_UCLIBC_CONFIG="$BR2EXT/configs/uClibc-0.9.33.config" $*
+    # replace explicit path to $BRDIR (example /home/valerio/hht/buildroot-2015.02/)
+    # with $(TOPDIR)
+    echo "-----> replacing $BRDIR"
+    echo '-----> with      $(TOPDIR)'
+    sed -i.bak "s,$BRDIR,\$\(TOPDIR\),g" "$BR2EXT/configs/uClibc-0.9.33.config"
+    echo "-----> restoring original timestamp"
+    touch -r $BRDIR/output/build/uclibc-*/.config "$BR2EXT/configs/uClibc-0.9.33.config"
+else
+    if echo $* | grep config > /dev/null
+    then
+	make BR2_EXTERNAL=$BR2EXT $* # cannot redirect stdin/stderr for linux-menuconfig etc.
+    else
+	echo -n "-----> STARTING " 2>&1    | tee    $MYDIR/make.log
+	date                               | tee -a $MYDIR/make.log
+	make BR2_EXTERNAL=$BR2EXT $*  2>&1 | tee -a $MYDIR/make.log
+	echo -n "-----> ENDING   " 2>&1    | tee -a $MYDIR/make.log
+	date                               | tee -a $MYDIR/make.log
+    fi
+fi
